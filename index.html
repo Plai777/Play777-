@@ -146,332 +146,511 @@ function openGame(name) {
 renderGames();
 </script>
 </body>
-  <!-- INÍCIO DO JOGO AURA DA SORTE -->
+  
+<!-- INÍCIO DA AURA DA SORTE -->
 
 <style>
-#auraGame {
+#auraRoom, #auraRoom * { box-sizing: border-box; }
+
+#auraRoom {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  overflow-y: auto;
+  background:
+    radial-gradient(ellipse at 50% 0%, #245d69 0%, transparent 42%),
+    linear-gradient(160deg, #071a2d, #171039 60%, #050b1c);
+  color: #fff;
   font-family: Arial, sans-serif;
-  color: white;
-  text-align: center;
-  padding: 18px 12px;
-  border-radius: 18px;
-  background: linear-gradient(160deg,#29104c,#07152f,#101c42);
-  max-width: 450px;
-  margin: 20px auto;
-  border: 2px solid #a778ff;
-  box-shadow: 0 0 22px #743dce;
+  padding: 12px;
+  padding-bottom: 28px;
 }
 
-#auraGame h2 {
-  color: #e2c8ff;
-  font-size: 26px;
-}
+#auraRoom.auraOpen { display: block; }
 
-#auraGame .saldo {
-  color: #a8ffcb;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-#auraGame .rolos {
+#auraRoom .auraTop {
+  max-width: 520px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
-  gap: 7px;
-  margin: 20px 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-#auraGame .rolo {
-  width: 29%;
-  max-width: 95px;
-  height: 95px;
+#auraRoom .auraSmallBtn {
+  background: #192c46;
+  color: white;
+  border: 1px solid #6e87b5;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 14px;
+}
+
+#auraRoom .auraTitle {
+  text-align: center;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #e4faff;
+  text-shadow: 0 0 14px #4cbdff;
+  margin: 20px 0 4px;
+}
+
+#auraRoom .auraSubtitle {
+  text-align: center;
+  color: #b9d9ec;
+  font-size: 12px;
+  margin: 0 0 15px;
+}
+
+#auraRoom .auraSky {
+  height: 82px;
+  max-width: 520px;
+  margin: 0 auto 14px;
+  border-radius: 50% 50% 12px 12px / 40% 40% 12px 12px;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% 90%, #54ffb7 0%, transparent 43%),
+    radial-gradient(ellipse at 55% 80%, #36baff 0%, transparent 48%),
+    radial-gradient(ellipse at 83% 90%, #bb69ff 0%, transparent 45%),
+    linear-gradient(#061125, #14254b);
+  border: 1px solid #658bc9;
+  box-shadow: 0 0 22px #3d72bb66;
+}
+
+#auraRoom .auraSky:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    105deg,
+    transparent 0 24px,
+    #ffffff0b 25px 27px,
+    transparent 28px 43px
+  );
+}
+
+#auraRoom .auraCredits {
+  max-width: 520px;
+  margin: 0 auto 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  background: #101b36;
+  border: 1px solid #4b6193;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 13px;
+}
+
+#auraRoom .auraCredits strong {
+  display: block;
+  color: #a5ffdf;
+  font-size: 17px;
+  margin-top: 4px;
+}
+
+#auraRoom .auraMachine {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 10px;
+  border: 2px solid #8276c8;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #26365c, #11172e 65%, #29204a);
+  box-shadow: inset 0 0 20px #0009, 0 8px 25px #0006;
+}
+
+#auraRoom .auraGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  padding: 6px;
+  border-radius: 10px;
+  background: #080f23;
+  border: 1px solid #526ca3;
+}
+
+#auraRoom .auraCell {
+  aspect-ratio: 0.82;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(#fff,#dce6ff);
-  color: #241448;
-  font-size: 36px;
-  border: 3px solid #a778ff;
-  border-radius: 12px;
+  font-size: clamp(23px, 7vw, 34px);
+  border-radius: 7px;
+  background: linear-gradient(145deg, #f4f8ff, #bdcbe8);
+  border: 1px solid #92a8d7;
+  text-shadow: 0 1px 1px #ffffff88;
 }
 
-#auraGame button,
-#auraGame select {
+#auraRoom .auraCell.auraWild {
+  background: linear-gradient(145deg, #e8caff, #7e44d6);
+  border-color: #f0d9ff;
+  box-shadow: inset 0 0 10px #fff5;
+}
+
+#auraRoom .auraControls {
+  max-width: 520px;
+  margin: 14px auto 0;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  gap: 9px;
+  align-items: center;
+}
+
+#auraRoom button { cursor: pointer; }
+
+#auraRoom .auraPlusMinus {
+  width: 48px;
+  height: 48px;
+  color: white;
+  font-size: 25px;
+  border: 1px solid #9d87e6;
+  border-radius: 12px;
+  background: #34235e;
+}
+
+#auraRoom .auraSpin {
+  min-height: 50px;
+  color: white;
+  font-size: 17px;
+  font-weight: 900;
+  border: 1px solid #e0c2ff;
+  border-radius: 12px;
+  background: linear-gradient(100deg, #6934d2, #a94ce8);
+  box-shadow: 0 3px 14px #8846e855;
+}
+
+#auraRoom .auraSpin:disabled,
+#auraRoom .auraPlusMinus:disabled {
+  opacity: .5;
+}
+
+#auraRoom .auraBetArea {
+  max-width: 520px;
+  margin: 12px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#auraRoom .auraCoin {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 19px;
+  background: linear-gradient(145deg, #fff0a1, #d99b26);
+  border: 2px solid #ffe7a0;
+}
+
+#auraRoom .auraBetLabel {
+  font-size: 12px;
+  color: #c6d7ef;
+}
+
+#auraRoom .auraBetValue {
+  color: #fff0a1;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 10px;
-  padding: 12px;
-  cursor: pointer;
 }
 
-#auraGame button {
-  border: 1px solid #bda0ff;
-}
-
-#auraGame .controle {
-  display: grid;
-  grid-template-columns: 58px 1fr 58px;
-  gap: 8px;
-  align-items: stretch;
-  margin: 15px 0;
-}
-
-#auraGame .lateral {
-  background: #382064;
+#auraRoom .auraBetSelect {
+  display: none;
+  max-width: 150px;
+  background: #152440;
   color: white;
-  font-size: 27px;
+  border: 1px solid #849ed1;
+  border-radius: 9px;
+  padding: 8px;
+  font-size: 14px;
 }
 
-#auraGame .start {
-  background: linear-gradient(90deg,#873cff,#d45bff);
-  color: white;
-  min-height: 52px;
+#auraRoom .auraBetSelect.visible { display: block; }
+
+#auraRoom .auraMessage {
+  max-width: 520px;
+  min-height: 36px;
+  text-align: center;
+  margin: 14px auto 0;
+  font-size: 13px;
+  color: #d9e6ff;
 }
 
-#auraGame .stop {
-  background: #263858;
-  color: white;
-  margin-top: 6px;
-  width: 100%;
+#auraRoom .auraWildBanner {
+  display: none;
+  text-align: center;
+  font-weight: 900;
+  font-size: 22px;
+  color: #f3d7ff;
+  margin: 12px auto;
+  text-shadow: 0 0 14px #c46aff;
 }
 
-#auraGame .seletor {
-  width: 100%;
-  background: white;
-  color: #241448;
-  margin: 8px 0;
+#auraRoom .auraWildBanner.visible { display: block; }
+
+#auraRoom .auraNote {
+  text-align: center;
+  font-size: 10px;
+  color: #9aaccb;
+  margin-top: 15px;
 }
 
-#auraGame .voltar {
-  background: #253858;
-  color: white;
-  margin-top: 12px;
-}
-
-#auraGame button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-#auraGame #mensagemAura {
-  min-height: 24px;
-  color: #e2c8ff;
+@media (max-height: 700px) {
+  #auraRoom .auraTitle { margin-top: 10px; }
+  #auraRoom .auraSky { height: 55px; }
+  #auraRoom .auraCell { font-size: 25px; }
 }
 </style>
 
-<button type="button" onclick="abrirAura()"
-  style="display:block;margin:20px auto;padding:14px 22px;
-  border:0;border-radius:12px;background:#873cff;
-  color:white;font-weight:bold;font-size:16px;">
-  ✨ Abrir Aura da Sorte
-</button>
+<div id="auraRoom" aria-label="Sala Aura da Sorte">
 
-<section id="auraGame" style="display:none">
+  <div class="auraTop">
+    <button type="button" class="auraSmallBtn"
+      onclick="fecharAura()">← VOLTAR</button>
+    <span style="font-size:12px;color:#c4d8ff">
+      DEMONSTRAÇÃO
+    </span>
+  </div>
 
-  <h2>🌌 AURA DA SORTE 🌌</h2>
+  <h2 class="auraTitle">AURA DA SORTE</h2>
+  <p class="auraSubtitle">O brilho do gelo revela a sorte</p>
 
-  <p>Modo de demonstração</p>
+  <div class="auraSky" aria-label="Aurora boreal"></div>
 
-  <p class="saldo">
-    Créditos: R$ <span id="saldoAura">100,00</span>
+  <div class="auraCredits">
+    <div>CRÉDITOS FICTÍCIOS
+      <strong id="auraBalance">R$ 100,00</strong>
+    </div>
+    <div style="text-align:right">APOSTA ATUAL
+      <strong id="auraBetDisplay">R$ 0,10</strong>
+    </div>
+  </div>
+
+  <div class="auraMachine">
+    <div class="auraGrid" id="auraGrid"></div>
+  </div>
+
+  <div class="auraWildBanner" id="auraWildBanner">
+    💎 WILD ×10 💎
+  </div>
+
+  <div class="auraControls">
+    <button type="button" class="auraPlusMinus"
+      id="auraMinus" onclick="mudarApostaAura(-1)">−</button>
+
+    <button type="button" class="auraSpin"
+      id="auraSpin" onclick="acaoAura()">▶ START</button>
+
+    <button type="button" class="auraPlusMinus"
+      id="auraPlus" onclick="mudarApostaAura(1)">+</button>
+  </div>
+
+  <div class="auraBetArea">
+    <button type="button" class="auraCoin"
+      aria-label="Selecionar aposta"
+      onclick="alternarListaAura()">🪙</button>
+
+    <div>
+      <div class="auraBetLabel">VALOR DA APOSTA</div>
+      <div class="auraBetValue" id="auraBetSmall">R$ 0,10</div>
+    </div>
+
+    <select class="auraBetSelect" id="auraBetSelect"
+      aria-label="Escolher valor da aposta"
+      onchange="escolherApostaAura(this.value)">
+    </select>
+  </div>
+
+  <p class="auraMessage" id="auraMessage">
+    Escolha sua aposta e aperte START.
   </p>
 
-  <div class="rolos">
-    <div class="rolo" id="rolo1">🌙</div>
-    <div class="rolo" id="rolo2">💎</div>
-    <div class="rolo" id="rolo3">❄️</div>
-  </div>
-
-  <p>Aposta selecionada:</p>
-  <p class="saldo" id="valorAposta">R$ 0,10</p>
-
-  <select id="listaApostasAura" class="seletor"
-    onchange="selecionarApostaAura(this.value)">
-  </select>
-
-  <div class="controle">
-    <button type="button" class="lateral"
-      onclick="mudarApostaAura(-1)" aria-label="Diminuir aposta">
-      −
-    </button>
-
-    <button type="button" class="start"
-      id="startAura" onclick="girarAura()">
-      ▶ START
-    </button>
-
-    <button type="button" class="lateral"
-      onclick="mudarApostaAura(1)" aria-label="Aumentar aposta">
-      +
-    </button>
-  </div>
-
-  <button type="button" class="stop"
-    id="stopAura" onclick="pararAura()" disabled>
-    ■ STOP
-  </button>
-
-  <p id="mensagemAura">Escolha a aposta e aperte START.</p>
-
-  <button type="button" class="voltar"
-    onclick="fecharAura()">Voltar ao site</button>
-
-</section>
+  <p class="auraNote">
+    Jogo demonstrativo · Créditos sem valor monetário real
+  </p>
+</div>
 
 <script>
-const apostasAura = [
-  10,20,30,40,50,60,70,80,90,100,
-  200,300,400,500,600,800,1000
-];
+(function() {
+  const root = document.getElementById("auraRoom");
+  if (!root || root.dataset.initialized === "yes") return;
+  root.dataset.initialized = "yes";
 
-let indiceApostaAura = 0;
-let creditosAura = 10000;
-let intervaloAura = null;
-let girandoAura = false;
-let rodadasAura = 0;
-let apostaRodadaAura = 0;
+  const values = [
+    10,20,30,40,50,60,70,80,90,100,
+    200,300,400,500,600,800,1000
+  ];
 
-const simbolosAura = ["🌙","💎","❄️","⭐","🐍","🟣","🌌"];
+  const symbols = ["❄️","💎","🌙","⭐","🧊","🔷","✨","🌌"];
+  let betIndex = 0;
+  let balance = 10000;
+  let spinning = false;
+  let timer = null;
+  let stopped = false;
+  let currentBet = 10;
+  let gridValues = [];
 
-function dinheiroAura(centavos) {
-  return (centavos / 100).toLocaleString("pt-BR", {
+  const $ = id => document.getElementById(id);
+  const money = n => (n / 100).toLocaleString("pt-BR", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
-}
 
-function abrirAura() {
-  document.getElementById("auraGame").style.display = "block";
-  document.getElementById("auraGame").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
+  function buildGrid() {
+    const grid = $("auraGrid");
+    grid.innerHTML = "";
+    gridValues = [];
 
-function fecharAura() {
-  pararAura();
-  document.getElementById("auraGame").style.display = "none";
-}
-
-function atualizarApostaAura() {
-  const lista = document.getElementById("listaApostasAura");
-  lista.innerHTML = "";
-
-  apostasAura.forEach((valor, indice) => {
-    const opcao = document.createElement("option");
-    opcao.value = indice;
-    opcao.textContent = "R$ " + dinheiroAura(valor);
-    lista.appendChild(opcao);
-  });
-
-  lista.value = indiceApostaAura;
-
-  document.getElementById("valorAposta").textContent =
-    "R$ " + dinheiroAura(apostasAura[indiceApostaAura]);
-
-  document.getElementById("saldoAura").textContent =
-    dinheiroAura(creditosAura);
-}
-
-function selecionarApostaAura(valor) {
-  if (girandoAura) return;
-  indiceApostaAura = Number(valor);
-  atualizarApostaAura();
-}
-
-function mudarApostaAura(direcao) {
-  if (girandoAura) return;
-
-  indiceApostaAura = Math.max(
-    0,
-    Math.min(apostasAura.length - 1, indiceApostaAura + direcao)
-  );
-
-  atualizarApostaAura();
-}
-
-function girarAura() {
-  if (girandoAura) return;
-
-  apostaRodadaAura = apostasAura[indiceApostaAura];
-
-  if (creditosAura < apostaRodadaAura) {
-    document.getElementById("mensagemAura").textContent =
-      "Créditos fictícios insuficientes.";
-    return;
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 5; col++) {
+        const cell = document.createElement("div");
+        cell.className = "auraCell";
+        cell.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        grid.appendChild(cell);
+        gridValues.push(cell);
+      }
+    }
   }
 
-  creditosAura -= apostaRodadaAura;
-  rodadasAura = 0;
-  girandoAura = true;
+  function update() {
+    $("auraBalance").textContent = "R$ " + money(balance);
+    $("auraBetDisplay").textContent = "R$ " + money(values[betIndex]);
+    $("auraBetSmall").textContent = "R$ " + money(values[betIndex]);
+    $("auraMinus").disabled = spinning || betIndex === 0;
+    $("auraPlus").disabled = spinning || betIndex === values.length - 1;
+    $("auraBetSelect").disabled = spinning;
+  }
 
-  document.getElementById("startAura").disabled = true;
-  document.getElementById("stopAura").disabled = false;
-  document.getElementById("mensagemAura").textContent =
-    "A aurora está girando...";
+  function buildSelect() {
+    const select = $("auraBetSelect");
+    values.forEach((v, i) => {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = "R$ " + money(v);
+      select.appendChild(option);
+    });
+    select.value = betIndex;
+  }
 
-  atualizarApostaAura();
+  window.abrirAura = function() {
+    root.classList.add("auraOpen");
+    document.body.style.overflow = "hidden";
+    update();
+  };
 
-  intervaloAura = setInterval(function() {
-    for (let i = 1; i <= 3; i++) {
-      const simbolo = simbolosAura[
-        Math.floor(Math.random() * simbolosAura.length)
-      ];
+  window.fecharAura = function() {
+    if (spinning) stopSpin();
+    root.classList.remove("auraOpen");
+    document.body.style.overflow = "";
+  };
 
-      document.getElementById("rolo" + i).textContent = simbolo;
+  window.alternarListaAura = function() {
+    if (spinning) return;
+    $("auraBetSelect").classList.toggle("visible");
+  };
+
+  window.escolherApostaAura = function(value) {
+    if (spinning) return;
+    betIndex = Math.max(0, Math.min(values.length - 1, Number(value)));
+    $("auraBetSelect").value = betIndex;
+    update();
+  };
+
+  window.mudarApostaAura = function(direction) {
+    if (spinning) return;
+    betIndex = Math.max(0, Math.min(values.length - 1, betIndex + direction));
+    $("auraBetSelect").value = betIndex;
+    update();
+  };
+
+  function startSpin() {
+    currentBet = values[betIndex];
+
+    if (balance < currentBet) {
+      $("auraMessage").textContent = "Créditos fictícios insuficientes.";
+      return;
     }
 
-    rodadasAura++;
+    balance -= currentBet;
+    spinning = true;
+    stopped = false;
+    $("auraSpin").textContent = "■ STOP";
+    $("auraMessage").textContent = "Os cristais estão girando...";
+    $("auraWildBanner").classList.remove("visible");
+    $("auraBetSelect").classList.remove("visible");
+    update();
 
-    if (rodadasAura >= 15) {
-      pararAura();
-      finalizarAura();
+    let ticks = 0;
+    timer = setInterval(() => {
+      gridValues.forEach(cell => {
+        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        cell.textContent = symbol;
+        cell.classList.toggle("auraWild", symbol === "💎");
+      });
+      ticks++;
+      if (ticks >= 16) stopSpin();
+    }, 110);
+  }
+
+  function stopSpin() {
+    if (!spinning || stopped) return;
+    stopped = true;
+    clearInterval(timer);
+    timer = null;
+    spinning = false;
+
+    const cells = gridValues.map(cell => cell.textContent);
+    let payout = 0;
+    let wild = false;
+
+    // Vitória demonstrativa: uma linha horizontal de cinco símbolos iguais.
+    for (let row = 0; row < 3; row++) {
+      const line = cells.slice(row * 5, row * 5 + 5);
+      const nonWild = line.filter(s => s !== "💎");
+      if (nonWild.length === 0) {
+        payout = Math.max(payout, currentBet * 10);
+        wild = true;
+      } else if (nonWild.every(s => s === nonWild[0])) {
+        payout = Math.max(payout, currentBet * 3);
+      } else if (line.filter(s => s === "💎").length >= 3) {
+        payout = Math.max(payout, currentBet * 2);
+      }
     }
-  }, 120);
-}
 
-function pararAura() {
-  if (!girandoAura) return;
+    if (payout > 0) {
+      balance += payout;
+      if (wild) {
+        $("auraWildBanner").classList.add("visible");
+        $("auraMessage").textContent =
+          "WILD ×10! Você recebeu R$ " + money(payout) +
+          " em créditos fictícios.";
+      } else {
+        $("auraMessage").textContent =
+          "Combinação premiada! Créditos recebidos: R$ " +
+          money(payout) + ".";
+      }
+    } else {
+      $("auraMessage").textContent =
+        "Rodada encerrada. Tente outra combinação.";
+    }
 
-  clearInterval(intervaloAura);
-  intervaloAura = null;
-  girandoAura = false;
-
-  document.getElementById("startAura").disabled = false;
-  document.getElementById("stopAura").disabled = true;
-
-  if (rodadasAura > 0) {
-    finalizarAura();
-  }
-}
-
-function finalizarAura() {
-  const resultados = [
-    document.getElementById("rolo1").textContent,
-    document.getElementById("rolo2").textContent,
-    document.getElementById("rolo3").textContent
-  ];
-
-  const mensagem = document.getElementById("mensagemAura");
-
-  if (resultados[0] === resultados[1] &&
-      resultados[1] === resultados[2]) {
-    creditosAura += apostaRodadaAura * 10;
-    mensagem.textContent =
-      "✨ TRÊS IGUAIS! +10x a aposta em créditos fictícios!";
-  } else if (resultados.includes("🟣")) {
-    creditosAura += apostaRodadaAura * 2;
-    mensagem.textContent =
-      "🌌 AURORA WILD! +2x a aposta em créditos fictícios!";
-  } else {
-    mensagem.textContent =
-      "Não foi desta vez. Escolha sua próxima aposta.";
+    $("auraSpin").textContent = "▶ START";
+    update();
   }
 
-  atualizarApostaAura();
-}
+  window.acaoAura = function() {
+    if (spinning) stopSpin();
+    else startSpin();
+  };
 
-atualizarApostaAura();
+  buildSelect();
+  buildGrid();
+  update();
+})();
 </script>
 
-<!-- FIM DO JOGO AURA DA SORTE -->
+<!-- FIM DA AURA DA SORTE -->
 </html>

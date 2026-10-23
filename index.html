@@ -139,4 +139,241 @@ function openGame(name){
 renderGames();
 </script>
 </body>
+  <!-- INÍCIO DO JOGO AURA DA SORTE -->
+
+<style>
+  #auraGame {
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    padding: 20px 12px;
+    border-radius: 18px;
+    background:
+      radial-gradient(ellipse at top, #56328b 0%, transparent 55%),
+      linear-gradient(180deg, #07152f, #142d50, #090d25);
+    max-width: 450px;
+    margin: 20px auto;
+    border: 2px solid #9b65ff;
+    box-shadow: 0 0 25px #743dce;
+  }
+
+  #auraGame h2 {
+    color: #d8b5ff;
+    font-size: 28px;
+    text-shadow: 0 0 12px #a65cff;
+  }
+
+  #auraGame .descricao {
+    color: #c9d8ff;
+    font-size: 14px;
+  }
+
+  #auraGame .rolos {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 25px 0;
+  }
+
+  #auraGame .rolo {
+    background: linear-gradient(#ffffff, #dce6ff);
+    color: #241448;
+    width: 85px;
+    height: 100px;
+    border-radius: 12px;
+    border: 3px solid #a778ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    box-shadow: 0 0 12px #9b65ff;
+  }
+
+  #auraGame button {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    margin: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #auraGame .girar {
+    background: linear-gradient(90deg, #8c39ff, #d45bff);
+    color: white;
+    box-shadow: 0 0 15px #a65cff;
+  }
+
+  #auraGame .voltar {
+    background: #253858;
+    color: white;
+    border: 1px solid #8b9bc0;
+  }
+
+  #auraGame .saldo {
+    color: #a8ffcb;
+    font-size: 17px;
+    font-weight: bold;
+  }
+
+  #auraGame #mensagemAura {
+    min-height: 24px;
+    color: #f1d6ff;
+  }
+</style>
+
+<button
+  type="button"
+  onclick="abrirAura()"
+  style="display:block;margin:20px auto;padding:14px 24px;
+  border:0;border-radius:12px;background:#873cff;
+  color:white;font-weight:bold;font-size:16px;"
+>
+  ✨ Abrir Aura da Sorte
+</button>
+
+<section id="auraGame" style="display:none;">
+
+  <h2>🌌 AURA DA SORTE 🌌</h2>
+
+  <p class="descricao">
+    Encontre a magia da aurora boreal!
+  </p>
+
+  <p class="saldo">
+    Créditos fictícios: <span id="saldoAura">1000</span>
+  </p>
+
+  <div class="rolos">
+    <div class="rolo" id="rolo1">🌙</div>
+    <div class="rolo" id="rolo2">💎</div>
+    <div class="rolo" id="rolo3">❄️</div>
+  </div>
+
+  <p id="mensagemAura">
+    Boa sorte! Faça sua primeira rodada.
+  </p>
+
+  <button
+    type="button"
+    class="girar"
+    onclick="girarAura()"
+  >
+    ✨ GIRAR
+  </button>
+
+  <br>
+
+  <button
+    type="button"
+    class="voltar"
+    onclick="fecharAura()"
+  >
+    Voltar ao site
+  </button>
+
+</section>
+
+<script>
+  let creditosAura = 1000;
+  let girandoAura = false;
+
+  const simbolosAura = [
+    "🌙",
+    "💎",
+    "❄️",
+    "⭐",
+    "🐍",
+    "🟣",
+    "🌌"
+  ];
+
+  function abrirAura() {
+    document.getElementById("auraGame").style.display = "block";
+
+    document.getElementById("auraGame").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function fecharAura() {
+    document.getElementById("auraGame").style.display = "none";
+  }
+
+  function girarAura() {
+    if (girandoAura) return;
+
+    if (creditosAura < 10) {
+      document.getElementById("mensagemAura").textContent =
+        "Créditos insuficientes para girar.";
+      return;
+    }
+
+    girandoAura = true;
+    creditosAura -= 10;
+
+    document.getElementById("saldoAura").textContent =
+      creditosAura;
+
+    document.getElementById("mensagemAura").textContent =
+      "A aurora está girando...";
+
+    let rodadas = 0;
+
+    const animacao = setInterval(function() {
+      for (let i = 1; i <= 3; i++) {
+        const indice = Math.floor(
+          Math.random() * simbolosAura.length
+        );
+
+        document.getElementById("rolo" + i).textContent =
+          simbolosAura[indice];
+      }
+
+      rodadas++;
+
+      if (rodadas >= 12) {
+        clearInterval(animacao);
+        finalizarAura();
+      }
+    }, 100);
+  }
+
+  function finalizarAura() {
+    const resultados = [
+      document.getElementById("rolo1").textContent,
+      document.getElementById("rolo2").textContent,
+      document.getElementById("rolo3").textContent
+    ];
+
+    if (
+      resultados[0] === "🟣" ||
+      resultados[1] === "🟣" ||
+      resultados[2] === "🟣"
+    ) {
+      document.getElementById("mensagemAura").textContent =
+        "🌌 AURORA WILD! Você encontrou o símbolo especial!";
+    } else if (
+      resultados[0] === resultados[1] &&
+      resultados[1] === resultados[2]
+    ) {
+      creditosAura += 100;
+
+      document.getElementById("mensagemAura").textContent =
+        "✨ TRÊS SÍMBOLOS IGUAIS! +100 créditos fictícios!";
+    } else {
+      document.getElementById("mensagemAura").textContent =
+        "Continue explorando a aurora!";
+    }
+
+    document.getElementById("saldoAura").textContent =
+      creditosAura;
+
+    girandoAura = false;
+  }
+</script>
+
+<!-- FIM DO JOGO AURA DA SORTE -->
 </html>

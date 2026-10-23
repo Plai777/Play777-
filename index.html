@@ -132,8 +132,16 @@ function showFavorites(){
   document.getElementById('games').scrollIntoView({behavior:'smooth'});
 }
 
-function openGame(name){
-  alert(name+'\nModo de demonstração. A mecânica será desenvolvida na próxima etapa!');
+function openGame(name) {
+  if (name === "Aura da Sorte") {
+    abrirAura();
+    return;
+  }
+
+  alert(
+    name +
+    "\nModo de demonstração. A mecânica será desenvolvida na próxima etapa!"
+  );
 }
 
 renderGames();

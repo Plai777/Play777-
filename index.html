@@ -131,11 +131,18 @@ function showFavorites(){
   `).join('')||'<p>Adicione jogos aos favoritos primeiro.</p>';
   document.getElementById('games').scrollIntoView({behavior:'smooth'});
 }
+  
+function openGame(name) {
+  if (name === "Aura da Sorte") {
+    abrirAura();
+    return;
+  }
 
-function openGame(name){
-  alert(name+'\nModo de demonstração. A mecânica será desenvolvida na próxima etapa!');
+  alert(
+    name +
+    "\nModo de demonstração. A mecânica será desenvolvida na próxima etapa!"
+  );
 }
-
 renderGames();
 </script>
 </body>

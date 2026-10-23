@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#21070f">
+<title>777 PLAY</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#16060b;color:#fff5e7;font-family:Arial,sans-serif}
+header{padding:18px;display:flex;justify-content:space-between;align-items:center;background:#270912;border-bottom:1px solid #b88948}
+.logo{font-size:27px;font-weight:900;color:#f5c66b}
+.balance{font-size:12px;border:1px solid #805b32;border-radius:20px;padding:9px}
+main{padding:16px;padding-bottom:85px;max-width:900px;margin:auto}
+.hero{min-height:210px;padding:22px;border-radius:18px;background:radial-gradient(circle at 80% 20%,#873b43,transparent 45%),linear-gradient(135deg,#581323,#20070e);border:1px solid #b88948;display:flex;flex-direction:column;justify-content:center}
+.eyebrow{color:#f5cb7c;letter-spacing:3px;font-size:11px;font-weight:bold}
+h1{font-size:32px;margin:12px 0}
+p{color:#d6c2c2;line-height:1.5}
+button{background:linear-gradient(135deg,#f4d38b,#c18a39);color:#2b1010;border:0;padding:12px 16px;border-radius:10px;font-weight:bold;cursor:pointer}
+h2{font-size:19px;margin-top:28px}
+.categories{display:flex;gap:9px;overflow-x:auto}
+.category{flex-shrink:0;background:#32131d;color:#f3d5a0;border:1px solid #58303a;border-radius:20px;padding:10px 14px}
+.search{width:100%;padding:14px;margin:22px 0 0;border-radius:10px;border:1px solid #57313a;background:#261018;color:white;font-size:16px}
+.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.game{min-width:0;background:#281019;border:1px solid #4a2831;border-radius:14px;padding:12px}
+.art{min-height:105px;border-radius:10px;display:grid;place-items:center;font-size:43px;background:linear-gradient(145deg,#663044,#26101b)}
+.game h3{font-size:14px;margin-bottom:5px}
+.game p{font-size:12px}
+.game button{width:100%;padding:10px 5px}
+.game .favorite{margin-top:7px;background:#40202a;color:#f4d38b}
+.notice{margin-top:22px;color:#b9a4a8;font-size:11px;text-align:center}
+nav{position:fixed;bottom:0;left:0;right:0;background:#210a12;border-top:1px solid #63402d;display:flex;justify-content:space-around;padding:15px 4px;color:#e6c78f;font-size:12px}
+@media(min-width:650px){.games{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">777 PLAY</div>
+  <div class="balance">✦ <span id="balance">100,00</span> créditos</div>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">EXPERIÊNCIA DE DEMONSTRAÇÃO</div>
+    <h1>Aura da Sorte ✨</h1>
+    <p>Um universo de luzes, símbolos e tesouros.</p>
+    <button onclick="openGame('Aura da Sorte')">EXPLORAR JOGO →</button>
+  </section>
+
+  <h2>Explore por categoria</h2>
+  <div class="categories">
+    <button class="category" onclick="filterGames('Todos')">Todos</button>
+    <button class="category" onclick="filterGames('Fantasia')">✨ Fantasia</button>
+    <button class="category" onclick="filterGames('Aventura')">🗺️ Aventura</button>
+    <button class="category" onclick="filterGames('Espaço')">🚀 Espaço</button>
+  </div>
+
+  <input class="search" id="search" placeholder="⌕ Buscar jogos..." oninput="renderGames()">
+  <h2>Jogos em destaque</h2>
+  <div class="games" id="games"></div>
+  <div class="notice">Protótipo experimental · Créditos fictícios, sem valor monetário.</div>
+</main>
+
+<nav>
+  <span onclick="filterGames('Todos')">⌂ Início</span>
+  <span onclick="document.getElementById('games').scrollIntoView()">▦ Jogos</span>
+  <span onclick="showFavorites()">♡ Favoritos</span>
+  <span onclick="alert('Perfil demonstrativo')">◉ Perfil</span>
+</nav>
+
+<script>
+const catalog=[
+  {name:'Aura da Sorte',category:'Fantasia',icon:'✨'},
+  {name:'Templo Perdido',category:'Aventura',icon:'🏛️'},
+  {name:'Órbita Dourada',category:'Espaço',icon:'🌌'},
+  {name:'Dragão de Rubi',category:'Fantasia',icon:'🐉'},
+  {name:'Tesouro da Selva',category:'Aventura',icon:'💎'},
+  {name:'Estrelas Cósmicas',category:'Espaço',icon:'🪐'}
+];
+
+let activeCategory='Todos';
+let favorites=[];
+
+function renderGames(){
+  const input=document.getElementById('search');
+  const query=input.value.toLowerCase();
+  const filtered=catalog.filter(game=>{
+    const matchesCategory=activeCategory==='Todos'||game.category===activeCategory;
+    const matchesQuery=game.name.toLowerCase().includes(query);
+    return matchesCategory&&matchesQuery;
+  });
+
+  document.getElementById('games').innerHTML=filtered.map(game=>`
+    <article class="game">
+      <div class="art">${game.icon}</div>
+      <h3>${game.name}</h3>
+      <p>${game.category} · Demo</p>
+      <button onclick="openGame('${game.name}')">JOGAR DEMO</button>
+      <button class="favorite" onclick="toggleFavorite('${game.name}')">
+        ${favorites.includes(game.name)?'♥ Favorito':'♡ Favoritar'}
+      </button>
+    </article>
+  `).join('')||'<p>Nenhum jogo encontrado.</p>';
+}
+
+function filterGames(category){
+  activeCategory=category;
+  renderGames();
+  document.getElementById('games').scrollIntoView({behavior:'smooth'});
+}
+
+function toggleFavorite(name){
+  if(favorites.includes(name)){
+    favorites=favorites.filter(item=>item!==name);
+  }else{
+    favorites.push(name);
+  }
+  renderGames();
+}
+
+function showFavorites(){
+  activeCategory='Todos';
+  document.getElementById('search').value='';
+  const chosen=catalog.filter(game=>favorites.includes(game.name));
+  document.getElementById('games').innerHTML=chosen.map(game=>`
+    <article class="game">
+      <div class="art">${game.icon}</div>
+      <h3>${game.name}</h3>
+      <button onclick="openGame('${game.name}')">JOGAR DEMO</button>
+    </article>
+  `).join('')||'<p>Adicione jogos aos favoritos primeiro.</p>';
+  document.getElementById('games').scrollIntoView({behavior:'smooth'});
+}
+
+function openGame(name){
+  alert(name+'\nModo de demonstração. A mecânica será desenvolvida na próxima etapa!');
+}
+
+renderGames();
+</script>
+</body>
+</html>
